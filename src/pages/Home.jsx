@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import FeaturedCarousel from '../components/FeaturedCarousel';
 import { useEffect, useState } from 'react';
-import { getMovies } from '../api/tmdb';
+// import { getMovies } from '../api/tmdb';
+import { getMovies } from '../api/backend';
 
 const STEPS = [
   { n: 1, file: 'src/api/tmdb.js', what: 'เขียนส่วน fetch ใน getJSON' },
