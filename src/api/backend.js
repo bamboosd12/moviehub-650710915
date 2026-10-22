@@ -3,7 +3,7 @@
 
 // '' = origin เดียวกับหน้าเว็บ CRA จะ proxy /api ไปที่ http://localhost:4000 ให้ (ตั้งใน package.json)
 // ตอนต่อ Go จริง ตั้ง REACT_APP_API_URL=https://api.ทีมเรา.xyz ใน .env และบน Vercel
-const BASE = process.env.REACT_APP_API_URL || '';
+const BASE = 'https://moviehub-650710915.onrender.com';
 
 export async function apiFetch(path, { method = 'GET', body, token } = {}) {
   const headers = { 'Content-Type': 'application/json' };   // 1) บอก server ว่า body เป็น JSON
@@ -64,7 +64,7 @@ export function removeFromWishlist(movieId, token) {
 
 // ---------- หนัง (สัปดาห์หน้า: เปลี่ยนหน้า Movies จาก tmdb.js มาใช้ตัวนี้) ----------
 export async function getMovies() {
-  const data = await apiFetch('/api/movies');
+    data = await apiFetch('/api/movies');
   return data.items;
 }
 export async function getMovie(movieId) {
