@@ -3,7 +3,7 @@
 
 // '' = origin เดียวกับหน้าเว็บ CRA จะ proxy /api ไปที่ http://localhost:4000 ให้ (ตั้งใน package.json)
 // ตอนต่อ Go จริง ตั้ง REACT_APP_API_URL=https://api.ทีมเรา.xyz ใน .env และบน Vercel
-const BASE = 'https://moviehub-650710915.onrender.com';
+const BASE = process.env.REACT_APP_API_URL || '';
 
 export async function apiFetch(path, { method = 'GET', body, token } = {}) {
   const headers = { 'Content-Type': 'application/json' };   // 1) บอก server ว่า body เป็น JSON
@@ -64,9 +64,57 @@ export function removeFromWishlist(movieId, token) {
 
 // ---------- หนัง (สัปดาห์หน้า: เปลี่ยนหน้า Movies จาก tmdb.js มาใช้ตัวนี้) ----------
 export async function getMovies() {
-    data = await apiFetch('/api/movies');
+  const data = await apiFetch('/api/movies');
   return data.items;
 }
 export async function getMovie(movieId) {
   return apiFetch(`/api/movies/${movieId}`);
+}
+
+ // ---------- Admin ----------
+export function getAdminStats(token) {
+  return apiFetch('/api/admin/stats', { token });
+}
+
+export function getAdminMembers(token) {
+  return apiFetch('/api/admin/members', { token });
+}
+
+export function setMemberRole(id, role, token) {
+  return apiFetch(`/api/admin/members/${id}/role`, {
+    method: 'PUT',
+    body: { role },
+    token,
+  });
+}
+
+export function getAdminMovie(id, token) {
+  return apiFetch(`/api/admin/movies/${id}`, { token });
+}
+
+export function getGenres() {
+  return apiFetch('/api/genres');
+}
+
+export function createMovie(movie, token) {
+  return apiFetch('/api/admin/movies', {
+    method: 'POST',
+    body: movie,
+    token,
+  });
+}
+
+export function updateMovie(id, movie, token) {
+  return apiFetch(`/api/admin/movies/${id}`, {
+    method: 'PUT',
+    body: movie,
+    token,
+  });
+}
+
+export function deleteMovie(id, token) {
+  return apiFetch(`/api/admin/movies/${id}`, {
+    method: 'DELETE',
+    token,
+  });
 }
