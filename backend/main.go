@@ -5,11 +5,27 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"moviehub/backend/database"
+	"moviehub/backend/handlers"
 )
 
 func main() {
+	// เชื่อมต่อ PostgreSQL
+	db, err := database.Connect()
+	if err != nil {
+		log.Fatal("Database connection failed: ", err)
+	}
+	defer db.Close()
+
+	// สร้าง Auth Handler
+	authHandler := &handlers.AuthHandler{
+		DB: db,
+	}
+
 	mux := http.NewServeMux()
 
+	// Health Check
 	mux.HandleFunc("GET /api/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
@@ -18,6 +34,9 @@ func main() {
 			"message": "MovieHub Go Backend is running",
 		})
 	})
+
+	// Register API
+	mux.HandleFunc("POST /api/auth/register", authHandler.Register)
 
 	port := os.Getenv("PORT")
 	if port == "" {
